@@ -6,7 +6,6 @@ use \Framework\DW3BancoDeDados;
 
 class Livros extends Modelo
 {   
-    const BUSCAR_TODOS  = 'SELECT * FROM livros';
     const BUSCAR_ID     = 'SELECT * FROM livros WHERE id = :id';
     const BUSCAR_FILTRO = 'SELECT * FROM livros WHERE TRUE';
     const INSERIR       = 'INSERT INTO livros(titulo, autor, q_exemplares, ano) VALUES (:titulo, :autor, :q_exemplares, :ano)';
@@ -16,20 +15,23 @@ class Livros extends Modelo
     private $titulo;
     private $autor;
     private $q_exemplares;
+    private $q_emprestados;
     private $ano;
 
     public function __construct(
-        $titulo       = null,
-        $autor        = null,
-        $q_exemplares = null,
-        $ano          = null,
-        $id           = null
+        $titulo        = null,
+        $autor         = null,
+        $q_exemplares  = null,
+        $q_emprestados = null,
+        $ano           = null,
+        $id            = null
     ){
-        $this->titulo       = $titulo;
-        $this->autor        = $autor;
-        $this->q_exemplares = $q_exemplares;
-        $this->ano          = $ano;
-        $this->id           = $id;
+        $this->titulo        = $titulo;
+        $this->autor         = $autor;
+        $this->q_exemplares  = $q_exemplares;
+        $this->q_emprestados = $q_emprestados;
+        $this->ano           = $ano;
+        $this->id            = $id;
     }
 
 
@@ -54,6 +56,11 @@ class Livros extends Modelo
         return $this->q_exemplares;
     }
 
+    public function getQ_emprestados()
+    {
+        return $this->q_emprestados;
+    }
+
     public function getAno()
     {
         return $this->ano;
@@ -75,6 +82,11 @@ class Livros extends Modelo
     public function setQ_exemplares($q_exemplares)
     {
         $this->q_exemplares = trim($q_exemplares);
+    }
+
+    public function setQ_emprestados($q_emprestados)
+    {
+        $this->q_emprestados = trim($q_emprestados);
     }
 
     public function setAno($ano)
@@ -143,10 +155,11 @@ class Livros extends Modelo
             $sqlWhere .= " AND livros.ano like ?";
         }
         if ($iduser != null){
-            $sqlWhere .= " AND livros.id not in (select id_livro from emprestimos where id_usuario = ? AND status = 0)";
+            $sqlWhere .= " AND livros.id not in (select id_livro from emprestimos where id_usuario = ? AND status = 0) AND q_exemplares >= (SELECT COUNT(*) FROM emprestimos WHERE id_livro = livros.id AND STATUS = 0 )";
         }
 
         $sql = self::BUSCAR_FILTRO . $sqlWhere;
+
 
         $comando = DW3BancoDeDados::prepare($sql);
 
@@ -175,11 +188,23 @@ class Livros extends Modelo
             $paginacao = "";
         }
 
-        $registros[] = [
+        $objetos = [];
+        foreach ($registros as $registro) {
+            $objetos[] = new Livros(
+                $registro['titulo'],
+                $registro['autor'],
+                $registro['q_exemplares'],
+                $registro['q_emprestados'],
+                $registro['ano'],
+                $registro['id']
+            );
+        }
+
+        $objetos[] = [
             'paginacao' => $paginacao
         ];
 
-        return $registros;
+        return $objetos;
     }
 
     public static function buscarId($id)
@@ -192,6 +217,7 @@ class Livros extends Modelo
             $registro['titulo'],
             $registro['autor'],
             $registro['q_exemplares'],
+            $registro['q_emprestados'],
             $registro['ano'],
             $registro['id']
         );

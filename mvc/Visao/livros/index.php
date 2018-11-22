@@ -12,6 +12,12 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<h2>Livros</h2>
+				<?php if ($sucesso) : ?>
+					<div class="alert alert-success alert-dismissible">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<?= $sucesso ?>
+					</div>
+				<?php endif ?>
 				<form method="get" id="form_pag">       
 					<div class="form-group">
 						<div class="form-row">
@@ -48,7 +54,7 @@
 							<th>Ações</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody>	
 
 						<?php if (empty($livros) || count($livros) == 1) : ?>
 							<tr>
@@ -58,21 +64,21 @@
 
 						<?php  for ($i = 0; $i < count($livros)-1; $i++) : ?>
 							<tr>
-								<td><?= $livros[$i]['id'] ?></td>
-								<td><?= $livros[$i]['titulo'] ?></td>
-								<td><?= $livros[$i]['autor']  ?></td>
-								<td><?= $livros[$i]['q_exemplares']?></td>
-								<td><?= $livros[$i]['ano']?></td>
+								<td><?= $livros[$i]->getId() ?></td>
+								<td><?= $livros[$i]->getTitulo() ?></td>
+								<td><?= $livros[$i]->getAutor() ?></td>
+								<td><?= $livros[$i]->getQ_exemplares()?></td>
+								<td><?= $livros[$i]->getAno()?></td>
 								<td>
-									<a href="<?= URL_RAIZ . 'livros/' . $livros[$i]['id'] ?>" title="Mostrar" class="mr-md-2">
+									<a href="<?= URL_RAIZ . 'livros/' . $livros[$i]->getId()?>" title="Mostrar" class="mr-md-2">
 										<i class="fa fa-eye" aria-hidden="true"></i>
 									</a>
 
-									<a href="<?= URL_RAIZ . 'livros/' . $livros[$i]['id'] . '/editar' ?>" title="Editar" class="text-info mr-md-2">
+									<a href="<?= URL_RAIZ . 'livros/' . $livros[$i]->getId() . '/editar' ?>" title="Editar" class="text-info mr-md-2">
 										<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 									</a>
 
-									<form id="formdeletar" action="<?= URL_RAIZ . 'livros/' . $livros[$i]['id'] ?>" method="post" class="inline text-danger">
+									<form id="formdeletar" action="<?= URL_RAIZ . 'livros/' . $livros[$i]->getId() ?>" method="post" class="inline text-danger">
 										<input type="hidden" name="_metodo" value="DELETE">
 										<a href="" title="Deletar" onclick="event.preventDefault(); this.parentNode.submit()">
 											<i class="fa fa-trash" aria-hidden="true"></i>

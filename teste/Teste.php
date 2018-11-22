@@ -14,8 +14,19 @@ abstract class Teste extends DW3Teste
 
 	public function logarNormal()
 	{
-		$usuario = new Usuario('UsuarioNormal123', '123');
-		$usuario->salvar();
-		DW3Sessao::set('usuario', $usuario->getId());
+			$usuario = new Usuario(
+               null,
+               "teste",
+               "12345",
+               '',
+               "Endereco teste",
+               "bairro teste",
+               "12",
+               "123213123",
+               "123213123213",
+               "1997-08-08"
+                );
+			$usuario->salvar();
+			DW3Sessao::set('usuario', $usuario->getId());
 	}
 }

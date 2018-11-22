@@ -8,9 +8,9 @@ use \Modelo\Livros;
 
 class Emprestimo extends Modelo
 {
-    const INSERIR   = 'INSERT INTO emprestimos(id_usuario, id_livro, data, status) VALUES (:id_usuario, :id_livro, :data, :status)';
-    const DEVOLUCAO = 'UPDATE emprestimos SET status = :status WHERE id = :id';
-    const DELETAR   = 'DELETE FROM emprestimos WHERE id = :id';
+    const INSERIR  = 'INSERT INTO emprestimos(id_usuario, id_livro, data, status) VALUES (:id_usuario, :id_livro, :data, :status)';
+    const DELETAR  = 'DELETE FROM emprestimos WHERE id = :id';
+    const VERIFICA = 'SELECT * FROM emprestimos WHERE id_livro = :id_livro AND id_usuario = :id_usuario AND emprestimos.status = 0';
 
     private $id;
     private $id_usuario;
@@ -21,15 +21,15 @@ class Emprestimo extends Modelo
     public function __construct(
         $id_usuario = null,
         $id_livro   = null,
-        $data      = null,
-        $status    = 0,
-        $id        = null
+        $data       = null,
+        $status     = 0,
+        $id         = null
     ) {
-        $this->id        = $id;
-        $this->id_usuario= $id_usuario;
-        $this->id_livro  = $id_livro;
-        $this->data      = $data;
-        $this->status    = $status;
+        $this->id         = $id;
+        $this->id_usuario = $id_usuario;
+        $this->id_livro   = $id_livro;
+        $this->data       = $data;
+        $this->status     = $status;
     }
 
 
@@ -101,6 +101,16 @@ class Emprestimo extends Modelo
         $comando->execute();
     }
 
+    private function verifica_usuario_emprestimos()
+    {
+        $comando = DW3BancoDeDados::prepare(self::VERIFICA);
+        $comando->bindValue(':id_livro'  , $this->id_livro  , PDO::PARAM_STR);
+        $comando->bindValue(':id_usuario', $this->id_usuario, PDO::PARAM_STR);
+        $comando->execute();
+
+        return $comando->rowCount();
+    }
+
     protected function verificarErros()
     {
         if ($this->id_usuario == null) {
@@ -110,9 +120,19 @@ class Emprestimo extends Modelo
         }
 
         if ($this->id_livro == null) {
-            $this->setErroMensagem('id_livro', 'Selecione um usuario.');
+            $this->setErroMensagem('id_livro', 'Selecione o livro.');
         } elseif (Livros::buscarId($this->id_livro) == null) {
-            $this->setErroMensagem('id_livro', 'Usuario inválido.');
+            $this->setErroMensagem('id_livro', 'Livro inválido.');
+        } else{
+            $livro = Livros::buscarId($this->id_livro);
+            if ($livro->getQ_emprestados() >= $livro->getQ_exemplares()){
+                 $this->setErroMensagem('id_livro', 'Livro indisponível');
+            }
         }
+    
+        if ($this->verifica_usuario_emprestimos() > 0) {
+            $this->setErroMensagem('id_livro', 'Erro: este usuário já possui um empréstimo desta obra');
+        }
+
     }
 }

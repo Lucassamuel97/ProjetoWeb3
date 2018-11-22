@@ -26,6 +26,7 @@
             <span class="nav-link-text">Usuarios</span>
           </a>
         </li>
+      <?php endif?>
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Empréstimo">
           <a class="nav-link" href="<?= URL_RAIZ . 'emprestimo/criar' ?>">
             <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
@@ -33,18 +34,17 @@
           </a>
         </li>
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Devolução">
-          <a class="nav-link" href="devolucao.php">
+          <a class="nav-link" href="<?= URL_RAIZ . 'devolucao' ?>">
             <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
             <span class="nav-link-text">Devolução</span>
           </a>
         </li>
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Relatórios">
-          <a class="nav-link" href="relatorios.php">
+          <a class="nav-link" href="<?= URL_RAIZ . 'relatorio' ?>">
             <i class="fa fa-file-text" aria-hidden="true"></i>
             <span class="nav-link-text">Relatórios</span>
           </a>
         </li>
-      <?php endif?>
     </ul>
     <!-- FINAL MENU -->
     <ul class="navbar-nav sidenav-toggler">
@@ -60,8 +60,9 @@
           <i class="fa fa-university" aria-hidden="true"></i> Biblioteca UTFPR</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link">
-            <i class="fa fa-user-circle" aria-hidden="true"></i> Usuário: <?=$usuario->getNome()?> </a>
+          <a class="nav-link" href="<?=URL_RAIZ . 'usuarios/'.$usuario->getId().'/editar'?>">
+            <i class="fa fa-user-circle" aria-hidden="true"></i> Usuário: <?=$usuario->getNome()?> 
+          </a>
           </li>
           <li class="nav-item">
             <form action="<?= URL_RAIZ . 'login' ?>" method="post" class="inline">

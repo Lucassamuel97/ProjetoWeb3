@@ -24,8 +24,8 @@ class UsuarioControlador extends Controlador
         $this->verificarLogado();
         if($this->verificarPermicao()){
             $this->visao('usuarios/criar.php', [
-            'usuario' => $this->getUsuario(),
-            'sucesso' => DW3Sessao::getFlash('sucesso')
+                'usuario' => $this->getUsuario(),
+                'sucesso' => DW3Sessao::getFlash('sucesso')
             ]);
         }
     }
@@ -36,19 +36,19 @@ class UsuarioControlador extends Controlador
 
         if($this->verificarPermicao()){
 
-            $usuario = new Usuario(
-                $_POST['nome'], 
-                $_POST['senha']
+            $usuario = new Usuario(                
+                null,
+                $_POST['nome'],
+                $_POST['senha'],
+                $_POST['admin'],
+                $_POST['endereco'],
+                $_POST['bairro'],
+                $_POST['numero'],
+                $_POST['rg'],
+                $_POST['cpf'],
+                $_POST['data_nasc']
             );
-
-            $usuario->setEndereco($_POST['endereco']);
-            $usuario->setBairro($_POST['bairro']);
-            $usuario->setNumero($_POST['numero']);
-            $usuario->setRg($_POST['rg']);
-            $usuario->setCpf($_POST['cpf']);
-            $usuario->setDataNascimento($_POST['data_nasc']);
-            $usuario->setAdmin($_POST['admin']);
-
+            
             if ($usuario->isValido()){
                 $usuario->salvar();
                 DW3Sessao::setFlash('sucesso', 'Usuario cadastrado com sucesso.');
@@ -66,24 +66,42 @@ class UsuarioControlador extends Controlador
     public function mostrar($id)
     {   
         $this->verificarLogado();
-        $registro = Usuario::buscarId($id);
-        $this->visao('usuarios/mostrar.php', [
-            'usuario' => $this->getUsuario(),
-            'registro'   => $registro
-        ]);
+        if($this->verificarPermicao()){
+            $registro = Usuario::buscarId($id);
+            $this->visao('usuarios/mostrar.php', [
+                'usuario' => $this->getUsuario(),
+                'registro'   => $registro
+            ]);
+        }
     }
 
     public function editar($id)
     {
         $this->verificarLogado();
-        $registro = Usuario::buscarId($id);
-        $this->visao('usuarios/editar.php', [
-            'usuario' => $this->getUsuario(),
-            'registro'   => $registro,
-            'sucesso' => DW3Sessao::getFlash('sucesso')
-        ]);
-    }
 
+        $usuario = $this->getUsuario();
+
+        if($usuario->isAdmin()){
+            $registro = Usuario::buscarId($id);
+            $this->visao('usuarios/editar.php', [
+                'usuario' => $this->getUsuario(),
+                'registro'   => $registro,
+                'sucesso' => DW3Sessao::getFlash('sucesso')
+            ]);
+        }else{
+            if ($usuario->getId() == $id){
+                $registro = Usuario::buscarId($id);
+                $this->visao('usuarios/editar.php', [
+                    'usuario' => $this->getUsuario(),
+                    'registro'   => $registro,
+                    'sucesso' => DW3Sessao::getFlash('sucesso')
+                ]);
+            }else{
+                $this->redirecionar(URL_RAIZ . 'home');
+            }
+        }
+    }
+    
     public function atualizar($id)
     {
         $usuario = Usuario::buscarId($id);

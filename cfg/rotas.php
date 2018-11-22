@@ -48,4 +48,11 @@ $rotas = [
     '/emprestimo/criar' => [
         'GET' => '\Controlador\EmprestimoControlador#criar',
     ],
+    '/devolucao' => [
+        'POST' => '\Controlador\DevolucaoControlador#armazenar',
+        'GET' => '\Controlador\DevolucaoControlador#index',
+    ],
+    '/relatorio' => [
+        'GET' => '\Controlador\RelatorioEmprestimoControlador#index',
+    ],
 ];

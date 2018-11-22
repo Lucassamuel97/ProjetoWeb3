@@ -26,16 +26,28 @@ class Usuario extends Modelo
     private $admin;
 
     public function __construct(
+        $id         = null,
         $nome       = null,
         $senhaPlana = null,
-        $id         = null,
-        $admin      = false
+        $admin      = false,
+        $endereco   = null,
+        $bairro     = null,
+        $numero     = null,
+        $rg         = null,
+        $cpf        = null,
+        $data_nasc  = null
     ){
-        $this->nome       = $nome;
-        $this->senhaPlana = $senhaPlana;
-        $this->admin      = $admin;
-        $this->senha      = password_hash($senhaPlana, PASSWORD_BCRYPT);
         $this->id         = $id;
+        $this->nome       = $nome;
+        $this->admin      = $admin;
+        $this->endereco   = $endereco;
+        $this->bairro     = $bairro;
+        $this->numero     = $numero;
+        $this->rg         = $rg;
+        $this->cpf        = $rg;
+        $this->data_nasc  = $data_nasc;
+        $this->senhaPlana = $senhaPlana;
+        $this->senha      = password_hash($senhaPlana, PASSWORD_BCRYPT);
     }
 
 
@@ -181,18 +193,18 @@ class Usuario extends Modelo
         $comando->execute();
         $registro = $comando->fetch();
         $usuario = new Usuario(
+            $registro['id'],
             $registro['nome'],
             null,
-            $registro['id'],
-            $registro['admin']
+            $registro['admin'],
+            $registro['endereco'],
+            $registro['bairro'],
+            $registro['numero'],
+            $registro['rg'],
+            $registro['cpf'],
+            $registro['data_nasc']
         );
-        $usuario->setEndereco($registro['endereco']);
-        $usuario->setBairro($registro['bairro']);
-        $usuario->setNumero($registro['numero']);
-        $usuario->setRg($registro['rg']);
-        $usuario->setCpf($registro['cpf']);
-        $usuario->setDataNascimento($registro['data_nasc']);
-
+        
         return $usuario;
     }
 
@@ -203,13 +215,20 @@ class Usuario extends Modelo
         $comando->execute();
         $registro = $comando->fetch();
         $usuario = null;
+        
         if ($registro) {
             $usuario = new Usuario(
-                $registro['nome'],
-                null,
-                $registro['id'],
-                $registro['admin']
-            );
+               $registro['id'],
+               $registro['nome'],
+               null,
+               $registro['admin'],
+               $registro['endereco'],
+               $registro['bairro'],
+               $registro['numero'],
+               $registro['rg'],
+               $registro['cpf'],
+               $registro['data_nasc']
+           );
             $usuario->senha = $registro['senha'];
         }
         return $usuario;

@@ -1,4 +1,4 @@
-<?php $this->incluirVisao('util/menu.php');?>
+<?php $this->incluirVisao('util/menu.php'); ?>
 <div class="content-wrapper">
   <div class="container-fluid">
     <ol class="breadcrumb">
@@ -111,6 +111,7 @@
                   }?>">
                 <?php $this->incluirVisao('util/formErro.php', ['campo' => 'data_nasc']) ?>
               </div>
+              <?php if ($usuario->isAdmin()): ?>
               <div class="col-md-3">
                 <label for="admin">Tipo de usuario</label>              
                 <select id="admin" name="admin" class="form-control">
@@ -119,12 +120,13 @@
                 </select>
                 <?php $this->incluirVisao('util/formErro.php', ['campo' => 'admin']) ?>
               </div>
+              <?php endif ?>
             </div>
           </div>                                              
           <div class="form-group">
             <div class="form-row">
               <div class="col-md-2">
-               <button class="btn btn-success btn-block" type="submit" value="cadastrar" name="cadastrar"> Cadastrar </button> 
+               <button class="btn btn-success btn-block" type="submit" value="cadastrar" name="cadastrar"> Gravar </button> 
              </div>
              <div class="col-md-2">
               <a href="<?= URL_RAIZ . 'usuarios' ?>" class="btn btn-danger btn-block text-light"><i class="fa fa-reply" aria-hidden="true"></i> Voltar</a>

@@ -22,13 +22,19 @@
 								<label for="ano"> Ano: </label>
 								<input class="form-control" id="ano" name="ano" type="text" disabled placeholder="Digite o Ano" value="<?=$livro->getAno() ?>">
 							</div>
-							<div class="col-md-6">
+						</div>
+						<div class="form-row">
+							<div class="col-md-3">
 								<label for="autor"> Autor: </label>
 								<input class="form-control" id="autor" name="autor" type="text" disabled placeholder="Digite o Autor" value="<?= $livro->getAutor() ?>">
 							</div>
 							<div class="col-md-3">
 								<label for="q_exemplares"> Quantidade de exemplares: </label>
 								<input class="form-control" id="q_exemplares" name="q_exemplares" type="text" disabled placeholder="Digite o Numero" value="<?= $livro->getQ_exemplares() ?>">
+							</div>
+							<div class="col-md-3">
+								<label> Quantidade Ex. Emprestados: </label>
+								<input class="form-control" type="text" disabled placeholder="Digite o Numero" value="<?= $livro->getQ_emprestados() ?>">
 							</div>
 						</div>
 					</div>

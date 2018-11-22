@@ -18,6 +18,18 @@
 						<?= $sucesso ?>
 					</div>
 				<?php endif ?>
+				<?php if ($erros) :?>
+					<div class="alert alert-danger alert-dismissible">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<?php
+						foreach ($erros as $value){
+							echo "$value <br />";	
+						}
+						?>
+					</div>
+				<?php endif ?>
 				<form method="get" id="form_pag">       
 					<div class="form-group">
 						<div class="form-row">
@@ -47,44 +59,45 @@
 							<th>Descrição</th>
 							<th>Autor</th>
 							<th>Ano</th>
+							<th>Disponível</th>
 							<th>Ação</th>
 						</tr>
 					</thead>
 					<tbody>
 
 						<?php if (empty($livros) || count($livros) == 1) : ?>
-							<tr>
-								<td colspan="99" class="text-center">Nenhum Livro encontrado.</td>
-							</tr>
-						<?php endif ?>
+						<tr>
+							<td colspan="99" class="text-center">Nenhum Livro encontrado.</td>
+						</tr>
+					<?php endif ?>
 
-						<?php  for ($i = 0; $i < count($livros)-1; $i++) : ?>
-							<tr>
-								<td><?= $livros[$i]['id'] ?></td>
-								<td><?= $livros[$i]['titulo'] ?></td>
-								<td><?= $livros[$i]['autor']  ?></td>
-								<td><?= $livros[$i]['ano']?></td>
-								<td>
-									<form action="<?= URL_RAIZ . 'emprestimo'?>" method="post">
-										<input type="hidden" name="usuario" value="<?=$usuario->getId()?>">
-										<input type="hidden" name="livro" value="<?=$livros[$i]['id']?>">
-										<button type="submit" class="btn btn-success">Emprestar</button>
-									</form>
-								</td>
-							</tr>
-						<?php endfor ?>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-7">
-				<nav aria-label="Page navigation example" class="float-right">
-					<ul class="pagination">
-						<?= $livros[$i]['paginacao'] ?>
-					</ul>
-				</nav>
-			</div>	
+					<?php  for ($i = 0; $i < count($livros)-1; $i++) : ?>
+						<tr>
+							<td><?= $livros[$i]->getId()?></td>
+							<td><?= $livros[$i]->getTitulo() ?></td>
+							<td><?= $livros[$i]->getAutor() ?></td>
+							<td><?= $livros[$i]->getAno()?></td>
+							<td><?= $livros[$i]->getQ_exemplares() - $livros[$i]->getQ_emprestados()?></td>
+							<td>
+								<form action="<?= URL_RAIZ . 'emprestimo'?>" method="post">
+									<input type="hidden" name="livro" value="<?=$livros[$i]->getId()?>">
+									<button type="submit" class="btn btn-success">Emprestar</button>
+								</form>
+							</td>
+						</tr>
+					<?php endfor ?>
+				</tbody>
+			</table>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-lg-7">
+			<nav aria-label="Page navigation example" class="float-right">
+				<ul class="pagination">
+					<?= $livros[$i]['paginacao'] ?>
+				</ul>
+			</nav>
+		</div>	
+	</div>
+</div>
 </div>

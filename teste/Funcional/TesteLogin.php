@@ -19,27 +19,51 @@ class TesteLogin extends Teste
             'nome' => 'admin',
             'senha' => 'admin'
         ]);
-        $this->verificarRedirecionar($resposta, URL_RAIZ . 'reclamacoes');
+        $this->verificarRedirecionar($resposta, URL_RAIZ . 'home');
         $this->verificar(DW3Sessao::get('usuario') != null);
     }
 
     public function testeLogarNaoAdmin()
-    {
-        (new Usuario('Joao', '123'))->salvar();
+    {   
+        ( new Usuario(
+         null,
+         "jose",
+         "1234",
+         '',
+         "Endereco teste",
+         "bairro teste",
+         "12",
+         "123213123",
+         "123213123213",
+         "1997-08-08"
+         ))->salvar();
+
         $resposta = $this->post(URL_RAIZ . 'login', [
-            'nome' => 'Joao',
-            'senha' => '123'
+            'nome' => 'jose',
+            'senha' => '1234'
         ]);
-        $this->verificarRedirecionar($resposta, URL_RAIZ . 'reclamacoes/criar');
+        $this->verificarRedirecionar($resposta, URL_RAIZ . 'home');
         $this->verificar(DW3Sessao::get('usuario') != null);
     }
 
     public function testeDeslogar()
     {
-        (new Usuario('Joao', '123'))->salvar();
+        ( new Usuario(
+         null,
+         "jose",
+         "1234",
+         '',
+         "Endereco teste",
+         "bairro teste",
+         "12",
+         "123213123",
+         "123213123213",
+         "1997-08-08"
+         ))->salvar();
+
         $resposta = $this->post(URL_RAIZ . 'login', [
-            'nome' => 'Joao',
-            'senha' => '123'
+            'nome' => 'jose',
+            'senha' => '1234'
         ]);
         $resposta = $this->delete(URL_RAIZ . 'login');
         $this->verificarRedirecionar($resposta, URL_RAIZ . 'login');

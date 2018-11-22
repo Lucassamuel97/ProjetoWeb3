@@ -19,7 +19,7 @@ abstract class Controlador extends DW3Controlador
         }
     }
 
-    protected function verificarPermicao($admin = false)
+    protected function verificarPermicao()
     {
         $usuario = $this->getUsuario();
         if ($usuario->isAdmin()){
