@@ -104,6 +104,9 @@ class UsuarioControlador extends Controlador
     
     public function atualizar($id)
     {
+
+        $this->verificarLogado();
+
         $usuario = Usuario::buscarId($id);
         
         $usuario->setNome($_POST['nome']);
@@ -132,12 +135,10 @@ class UsuarioControlador extends Controlador
 
     public function destruir($id)
     {
+
+        $this->verificarLogado();
+        
         Usuario::destruir($id);
         $this->redirecionar(URL_RAIZ . 'usuarios');
-    }
-
-    public function sucesso()
-    {
-        $this->visao('usuarios/sucesso.php');
     }
 }

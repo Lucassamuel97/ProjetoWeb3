@@ -11,6 +11,7 @@ class Devolucao extends Modelo
     const ATUALIZAR = 'UPDATE emprestimos SET status = :status WHERE id = :id';
     const BUSCAR_EMPRESTIMOS  = " SELECT emprestimos.id,date_format(`data`,'%d/%m/%Y') AS `data_formatada`,livros.titulo FROM emprestimos JOIN livros ON id_livro=livros.id WHERE id_usuario= :id AND emprestimos.STATUS= 0 ORDER BY data asc";
     const BUSCAR_ID = 'SELECT * FROM emprestimos WHERE id = :id';
+    const DI_QUANT_LIVRO = 'UPDATE livros SET q_emprestados = q_emprestados - 1 WHERE livros.id = (SELECT id_livro FROM emprestimos WHERE id = :id_emprestimo)';
 
     private $id_emprestimo;
     private $id_usuario;
@@ -21,7 +22,7 @@ class Devolucao extends Modelo
         $id_emprestimo = null,
         $id_usuario    = null ,
         $status        = '0'
-    ) {
+    ){
         $this->id_emprestimo = $id_emprestimo;
         $this->id_usuario = $id_usuario;
         $this->status = $status;
@@ -85,10 +86,19 @@ class Devolucao extends Modelo
 
     private function devolucao()
     {
+        DW3BancoDeDados::getPdo()->beginTransaction();
+
         $comando = DW3BancoDeDados::prepare(self::ATUALIZAR);
         $comando->bindValue(':status', $this->status       , PDO::PARAM_STR);
         $comando->bindValue(':id'    , $this->id_emprestimo, PDO::PARAM_STR);
+        
         $comando->execute();
+        
+        $comando = DW3BancoDeDados::prepare(self::DI_QUANT_LIVRO);
+        $comando->bindValue(':id_emprestimo'    , $this->id_emprestimo   , PDO::PARAM_STR);
+        $comando->execute();
+
+        DW3BancoDeDados::getPdo()->commit();
     }
 
     protected function verificarErros()

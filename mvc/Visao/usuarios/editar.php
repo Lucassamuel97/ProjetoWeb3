@@ -5,7 +5,7 @@
       <li class="breadcrumb-item">
         <a href="#">Usuário</a>
       </li>
-      <li class="breadcrumb-item active">Cadastro</li>
+      <li class="breadcrumb-item active">Editar</li>
     </ol>
     
     <div class="row">

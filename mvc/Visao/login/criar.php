@@ -13,11 +13,6 @@
             <input class="form-control <?= $this->getErroCss('login') ?>" id="senha" name="senha" type="password" placeholder="Digite a senha" >
             <?php $this->incluirVisao('util/formErro.php', ['campo' => 'login']) ?>
           </div>
-          <div class="form-group">
-            <div class="form-check">
-              <a class="link_padrao"  href="<?= URL_RAIZ . 'usuarios/criar' ?>">Não tem um usuário? Cadastrar-se aqui!</a>
-            </div>
-          </div>
           <button class="btn btn-primary btn-block" type="submit" value="entrar" name="entrar">Login</button>
         </form>
       </div>

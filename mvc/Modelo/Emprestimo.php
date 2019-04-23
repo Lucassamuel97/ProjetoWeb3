@@ -11,6 +11,7 @@ class Emprestimo extends Modelo
     const INSERIR  = 'INSERT INTO emprestimos(id_usuario, id_livro, data, status) VALUES (:id_usuario, :id_livro, :data, :status)';
     const DELETAR  = 'DELETE FROM emprestimos WHERE id = :id';
     const VERIFICA = 'SELECT * FROM emprestimos WHERE id_livro = :id_livro AND id_usuario = :id_usuario AND emprestimos.status = 0';
+    const AC_QUANT_LIVRO = 'UPDATE livros SET q_emprestados = q_emprestados + 1 WHERE livros.id = :id_livro;';
 
     private $id;
     private $id_usuario;
@@ -93,12 +94,22 @@ class Emprestimo extends Modelo
 
     private function inserir()
     {
+        DW3BancoDeDados::getPdo()->beginTransaction();
+
         $comando = DW3BancoDeDados::prepare(self::INSERIR);
         $comando->bindValue(':id_usuario', $this->id_usuario, PDO::PARAM_STR);
         $comando->bindValue(':id_livro'  , $this->id_livro  , PDO::PARAM_STR);
         $comando->bindValue(':data'      , $this->data      , PDO::PARAM_STR);
         $comando->bindValue(':status'    , $this->status    , PDO::PARAM_STR);
         $comando->execute();
+
+        $this->id = DW3BancoDeDados::getPdo()->lastInsertId();
+        
+        $comando = DW3BancoDeDados::prepare(self::AC_QUANT_LIVRO);
+        $comando->bindValue(':id_livro'    , $this->id_livro   , PDO::PARAM_STR);
+        $comando->execute();
+
+        DW3BancoDeDados::getPdo()->commit();
     }
 
     private function verifica_usuario_emprestimos()

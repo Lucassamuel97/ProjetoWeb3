@@ -10,7 +10,7 @@ class RelatorioEmprestimos extends Modelo
 
     public static function buscarRegistros($filtro = [], $usuario)
     {
-        $sqlWhere = '';
+        $sqlWhere  = '';
         $quant_pag = 10;
         
         if (!$usuario->isAdmin()){

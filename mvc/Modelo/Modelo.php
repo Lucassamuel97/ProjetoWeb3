@@ -9,7 +9,7 @@ abstract class Modelo extends DW3Modelo
     {
         $limite = 5;
         $quant_pag = 10;
-        $numero_de_paginas = floor( $total / $quant_pag);
+        $numero_de_paginas = round( $total / $quant_pag);
 
         $paginas = null;
 
@@ -32,9 +32,9 @@ abstract class Modelo extends DW3Modelo
                 $paginas .= "<li class='page-item'><button class='page-link' value='0' disabled>...</button> </li>";
         }
 
-        $paginas .= "<li class='page-item'><button class='page-link' value='".$numero_de_paginas."'>".$numero_de_paginas."</button> </li>";
+        $paginas .= "<li class='page-item'><button class='page-link' value='".($numero_de_paginas - 1)."'>".$numero_de_paginas."</button> </li>";
 
-        if ($pagina_atual != $numero_de_paginas){
+        if (($pagina_atual + 1) != $numero_de_paginas){
         	$paginas .= "<li class='page-item'><button class='page-link' value='".($pagina_atual + 1)."'> > </button></li>";
         }
 
